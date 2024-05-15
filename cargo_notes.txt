@@ -1,0 +1,82 @@
+Crates is the smallest amount of code Rust compiler considers. A single .rs file is a crate.
+There are 2 types of crates:
+	- Binary crates		-> compiles to a program
+	- Library crates	-> Define functionality meant to be used by other programs
+
+"Crate" used interchangeably with "Library".
+
+A Package is a bundle of one or more Crates.
+	- Contains a Cargo.toml file.
+	- Can contain as many Binary crates as you want, but only 1 Library crate.
+	- Use src/lib.rs instead of main.rs to make library.
+		- With cargo: cargo new <x> --lib
+	- Can have both lib.rs and main.rs
+	- Use src/bin/ to store multiple binary .rs files. They will be considered separate binary crates.
+
+Modules :
+	- Starts at the root, main.rs or lib.rs
+	- Looks for dependency requirements, e.g. pub mod <x>
+	- It will look in file of name <x>, if it finds more modules in that file, it will keep going down until no more declarations.
+	- Once added, reachable through crate::<x>::second_name::struct*, apply use * and you can access struct directly.
+	- To make code reachable in submodules, add pub keyword before declarations.
+	- Reach module through absolute or relative path.
+	- Can use super to build relative paths.
+	- Can make struct public, but components will still be private, need to make public case by case.
+	- Public enums have all their fields public. ! ENUMS ARE PUBLIC BY DEFAULT !
+	- Bring modules into scope with use.
+	- When bringing two types with the same name, resolve with: use <path_to_module> as <x>;
+	- Bringing multiple types from the same module
+		- use std::cmp::Ordering;
+		  use std::io;
+		--->
+		- use std::{cmp::Ordering, io};
+		-------------------------
+		- use std::io;
+		  use std::io:Write;
+		--->
+		- use std::io::{self, Write};
+		-------------------------
+		- use std::Collections::*;
+	- Structure of directory given in book :
+	crate
+    └── main/lib.rs			-> refers to <x> and <y>
+        ├── <x>				-> refers to every item inside
+        │   ├── x_stuff
+        │   └── x_stuff_more
+        └── <y>				-> refers to every item inside
+            ├── y_stuff1
+            ├── y_stuff2
+            └── y_stuff3
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+Modules Cheat Sheet
+
+Here we provide a quick reference on how modules, paths, the use keyword, and the pub keyword work in the compiler, and how most
+developers organize their code. We’ll be going through examples of each of these rules throughout this chapter, but this is a great
+place to refer to as a reminder of how modules work.
+
+    Start from the crate root: When compiling a crate, the compiler first looks in the crate root file (usually src/lib.rs
+	for a library crate or src/main.rs for a binary crate) for code to compile.
+    Declaring modules: In the crate root file, you can declare new modules; say, you declare a “garden” module with mod garden;.
+	The compiler will look for the module’s code in these places:
+        Inline, within curly brackets that replace the semicolon following mod garden
+        In the file src/garden.rs
+        In the file src/garden/mod.rs
+    Declaring submodules: In any file other than the crate root, you can declare submodules. For example, you might declare mod
+	vegetables; in src/garden.rs. The compiler will look for the submodule’s code within the directory named for the parent module
+	in these places:
+        Inline, directly following mod vegetables, within curly brackets instead of the semicolon
+        In the file src/garden/vegetables.rs
+        In the file src/garden/vegetables/mod.rs
+    Paths to code in modules: Once a module is part of your crate, you can refer to code in that module from anywhere else in that
+	same crate, as long as the privacy rules allow, using the path to the code. For example, an Asparagus type in the garden vegetables
+	module would be found at crate::garden::vegetables::Asparagus.
+    Private vs public: Code within a module is private from its parent modules by default. To make a module public, declare it with pub
+	mod instead of mod. To make items within a public module public as well, use pub before their declarations.
+    The use keyword: Within a scope, the use keyword creates shortcuts to items to reduce repetition of long paths. In any scope that
+	can refer to crate::garden::vegetables::Asparagus, you can create a shortcut with use crate::garden::vegetables::Asparagus; and
+	from then on you only need to write Asparagus to make use of that type in the scope.
