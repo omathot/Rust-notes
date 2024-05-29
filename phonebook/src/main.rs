@@ -2,8 +2,7 @@ mod phonebook;
 
 use std::process::exit;
 use::std::{io::{self, Write}, env};
-use crate::phonebook::Phonebook;
-use crate::phonebook::Inputs;
+use crate::phonebook::{Phonebook, Inputs};
 
 fn main() {
     let args_n = env::args().count();
