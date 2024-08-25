@@ -4,7 +4,7 @@ use std::{borrow::Borrow, cell::RefCell, rc::{Rc, Weak}};
 struct Node {
 	value: i32,
 	parent: RefCell<Weak<Node>>, // child should not own parent, if child gets dropped parent should exist.
-	children: RefCell<Vec<Rc<Node>>>, // parent should own child, if parent gets dropped child should drop.
+	children: RefCell<Vec<Rc<Node>>>, // parent should own child, if parent gets dropped child should drop. (Assuming no other ref to child)
 }
 
 fn main() {
