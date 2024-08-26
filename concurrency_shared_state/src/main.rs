@@ -9,6 +9,10 @@ use std::{sync::{Arc, Mutex}, thread};
 // deadlocks can still happen :
 // 		These occur when an operation needs to lock two resources and two threads have each acquired one of
 // 		the locks, causing them to wait for each other forever.
+
+
+// from rust ecosystem: crates like rayon and parking_lot are better than std library for parallelism.
+// at first glance i'd lean towards parking_lot
 fn main() {
     let counter = Arc::new(Mutex::new(0));	// notice we don't create it as mut.
 	let mut handles = vec![];
